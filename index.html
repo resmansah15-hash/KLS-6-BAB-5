@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Pembelajaran PAI Kelas 6 - Jasa Khulafaurrasyidin</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <!-- Tone.js for Audio FX -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        emeraldCustom: '#059669',
+                        goldCustom: '#F59E0B',
+                        skyCustom: '#0284C7',
+                        purpleCustom: '#7C3AED',
+                        creamCustom: '#FFFBEB'
+                    },
+                    fontFamily: {
+                        heading: ['Fredoka', 'sans-serif'],
+                        body: ['Nunito', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 50%, #dcfce7 100%);
+            min-height: 100vh;
+        }
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Fredoka', sans-serif;
+        }
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #10B981;
+            border-radius: 10px;
+        }
+        .tab-active {
+            background-color: #059669;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="text-slate-800 flex flex-col min-h-screen">
+
+    <!-- Header Navigation -->
+    <header class="bg-white/90 backdrop-blur-md border-b-4 border-emerald-500 sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="showScreen('home')">
+                <div class="bg-emerald-500 text-white p-2.5 rounded-2xl shadow-md animate-bounce">
+                    <i class="fa-solid fa-mosque text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold text-emerald-700 leading-tight">PAI KELAS 6 SD</h1>
+                    <p class="text-xs text-amber-600 font-bold tracking-wide">JASA KHULAFARRASYIDIN UNTUK DUNIA</p>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <nav class="hidden md:flex items-center gap-2">
+                <button onclick="showScreen('home')" class="nav-btn px-4 py-2 rounded-xl font-bold text-slate-700 hover:bg-emerald-100 hover:text-emerald-700 transition"><i class="fa-solid fa-house mr-2"></i>Beranda</button>
+                <button onclick="showScreen('materi')" class="nav-btn px-4 py-2 rounded-xl font-bold text-slate-700 hover:bg-emerald-100 hover:text-emerald-700 transition"><i class="fa-solid fa-book-open mr-2"></i>Materi</button>
+                <button onclick="showScreen('kuis')" class="nav-btn px-4 py-2 rounded-xl font-bold text-slate-700 hover:bg-emerald-100 hover:text-emerald-700 transition"><i class="fa-solid fa-gamepad mr-2"></i>Kuis Interaktif</button>
+                <button onclick="toggleAudio()" id="audioBtn" class="bg-amber-100 text-amber-700 px-3 py-2 rounded-xl font-bold hover:bg-amber-200 transition">
+                    <i class="fa-solid fa-volume-high" id="audioIcon"></i> Sound FX
+                </button>
+            </nav>
+
+            <!-- Mobile Menu Toggle -->
+            <button onclick="toggleMobileMenu()" class="md:hidden text-2xl text-emerald-700 p-2">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-slate-200 px-4 py-3 flex flex-col gap-2">
+            <button onclick="showScreen('home'); toggleMobileMenu()" class="w-full text-left py-2 font-bold text-slate-700 border-b"><i class="fa-solid fa-house mr-2 text-emerald-600"></i>Beranda</button>
+            <button onclick="showScreen('materi'); toggleMobileMenu()" class="w-full text-left py-2 font-bold text-slate-700 border-b"><i class="fa-solid fa-book-open mr-2 text-emerald-600"></i>Materi</button>
+            <button onclick="showScreen('kuis'); toggleMobileMenu()" class="w-full text-left py-2 font-bold text-slate-700"><i class="fa-solid fa-gamepad mr-2 text-emerald-600"></i>Kuis Interaktif</button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-6">
+
+        <!-- SCREEN 1: BERANDA / HOME -->
+        <section id="screen-home" class="screen-content space-y-8">
+            <!-- Hero Banner -->
+            <div class="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-3xl p-6 md:p-10 text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="z-10 max-w-2xl text-center md:text-left space-y-4">
+                    <span class="bg-amber-400 text-slate-900 text-xs md:text-sm font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow">Kurikulum Merdeka - Elemen SPI</span>
+                    <h2 class="text-3xl md:text-5xl font-extrabold leading-tight">Mengenal Jasa Agung Khulafaurrasyidin</h2>
+                    <p class="text-emerald-100 text-base md:text-lg">Mari teladani perjuangan, kepemimpinan, dan akhlak mulia 4 Khalifah pertama Islam setelah wafatnya Rasulullah SAW.</p>
+                    <div class="flex flex-wrap gap-3 justify-center md:justify-start pt-2">
+                        <button onclick="showScreen('materi')" class="bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold px-6 py-3 rounded-2xl shadow-lg transition transform active:scale-95 flex items-center gap-2">
+                            <i class="fa-solid fa-play"></i> Mulai Belajar
+                        </button>
+                        <button onclick="showScreen('kuis')" class="bg-white/20 hover:bg-white/30 text-white font-bold px-6 py-3 rounded-2xl backdrop-blur-md transition flex items-center gap-2">
+                            <i class="fa-solid fa-trophy"></i> Uji Kemampuan
+                        </button>
+                    </div>
+                </div>
+                <div class="z-10 relative">
+                    <div class="w-48 h-48 md:w-64 md:h-64 bg-amber-300/20 rounded-full flex items-center justify-center animate-float backdrop-blur-sm border-2 border-amber-300/40">
+                        <i class="fa-solid fa-crown text-8xl md:text-9xl text-amber-300 drop-shadow-lg"></i>
+                    </div>
+                </div>
+                <!-- Decorative Circle background -->
+                <div class="absolute -right-10 -bottom-10 w-80 h-80 bg-white/10 rounded-full blur-2xl"></div>
+            </div>
+
+            <!-- Capaian & Tujuan Pembelajaran -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-3xl p-6 shadow-md border-l-8 border-sky-500 space-y-3">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-sky-100 text-sky-600 p-3 rounded-xl"><i class="fa-solid fa-bullseye text-xl"></i></div>
+                        <h3 class="text-xl font-bold text-slate-800">Capaian Pembelajaran (CP)</h3>
+                    </div>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Peserta didik mampu memahami sejarah peradaban Islam, khususnya perjuangan dan jasa-jasa <strong>Khulafaurrasyidin</strong> (Abu Bakar Ash-Shiddiq, Umar bin Khattab, Utsman bin Affan, dan Ali bin Abi Thalib) dalam mempertahankan, mengembangkan, dan meneladani nilainya dalam kehidupan sehari-hari.
+                    </p>
+                </div>
+                <div class="bg-white rounded-3xl p-6 shadow-md border-l-8 border-emerald-500 space-y-3">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-emerald-100 text-emerald-600 p-3 rounded-xl"><i class="fa-solid fa-list-check text-xl"></i></div>
+                        <h3 class="text-xl font-bold text-slate-800">Tujuan Pembelajaran (TP)</h3>
+                    </div>
+                    <ul class="text-slate-600 text-sm space-y-1.5 list-disc list-inside">
+                        <li>Menjelaskan biografi dan proses pengangkatan 4 Khalifah.</li>
+                        <li>Mengidentifikasi jasa dan kontribusi besar 4 Khalifah bagi Islam.</li>
+                        <li>Meneladani sikap jujur, tegas, dermawan, dan cerdas dalam kehidupan.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Quick Access Cards -->
+            <div>
+                <h3 class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-users text-emerald-600"></i> Pilih Khalifah untuk Dipelajari
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Card 1 -->
+                    <div onclick="openKhalifah('abubakar')" class="bg-white rounded-3xl p-6 shadow-md border-2 border-emerald-100 card-hover cursor-pointer flex flex-col items-center text-center">
+                        <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-3xl font-bold mb-4 shadow-inner">
+                            1
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-800">Abu Bakar Ash-Shiddiq</h4>
+                        <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full mt-2">Gelaran: Ash-Shiddiq</span>
+                        <p class="text-slate-500 text-xs mt-3">Tegas membela kebenaran & Penyelamat Persatuan Umat.</p>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div onclick="openKhalifah('umar')" class="bg-white rounded-3xl p-6 shadow-md border-2 border-sky-100 card-hover cursor-pointer flex flex-col items-center text-center">
+                        <div class="w-20 h-20 bg-sky-100 text-sky-600 rounded-2xl flex items-center justify-center text-3xl font-bold mb-4 shadow-inner">
+                            2
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-800">Umar bin Khattab</h4>
+                        <span class="bg-sky-50 text-sky-700 text-xs font-bold px-3 py-1 rounded-full mt-2">Gelaran: Al-Faruq</span>
+                        <p class="text-slate-500 text-xs mt-3">Singa Padang Pasir & Pelopor Pembaharuan Administrasi.</p>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div onclick="openKhalifah('utsman')" class="bg-white rounded-3xl p-6 shadow-md border-2 border-amber-100 card-hover cursor-pointer flex flex-col items-center text-center">
+                        <div class="w-20 h-20 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center text-3xl font-bold mb-4 shadow-inner">
+                            3
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-800">Utsman bin Affan</h4>
+                        <span class="bg-amber-50 text-amber-700 text-xs font-bold px-3 py-1 rounded-full mt-2">Gelaran: Dzun Nurain</span>
+                        <p class="text-slate-500 text-xs mt-3">Dermawan, Pemalu & Kodifikasi Mushaf Al-Qur'an.</p>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div onclick="openKhalifah('ali')" class="bg-white rounded-3xl p-6 shadow-md border-2 border-purple-100 card-hover cursor-pointer flex flex-col items-center text-center">
+                        <div class="w-20 h-20 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center text-3xl font-bold mb-4 shadow-inner">
+                            4
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-800">Ali bin Abi Thalib</h4>
+                        <span class="bg-purple-50 text-purple-700 text-xs font-bold px-3 py-1 rounded-full mt-2">Gelaran: Babul 'Ilmi</span>
+                        <p class="text-slate-500 text-xs mt-3">Cerdas, Pemberani & Gerbang Ilmu Pengetahuan.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 2: MATERI PEMBELAJARAN -->
+        <section id="screen-materi" class="screen-content hidden space-y-6">
+            <!-- Tabs Menu -->
+            <div class="flex flex-wrap gap-2 bg-white/80 p-2 rounded-2xl shadow-sm border border-slate-200">
+                <button onclick="switchTab('abubakar')" id="tab-abubakar" class="tab-btn flex-1 min-w-[140px] py-3 px-4 rounded-xl font-bold text-sm md:text-base transition text-center flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-shield-halved"></i> Abu Bakar r.a.
+                </button>
+                <button onclick="switchTab('umar')" id="tab-umar" class="tab-btn flex-1 min-w-[140px] py-3 px-4 rounded-xl font-bold text-sm md:text-base transition text-center flex items-center justify-center gap-2 text-slate-600 hover:bg-slate-100">
+                    <i class="fa-solid fa-scale-balanced"></i> Umar r.a.
+                </button>
+                <button onclick="switchTab('utsman')" id="tab-utsman" class="tab-btn flex-1 min-w-[140px] py-3 px-4 rounded-xl font-bold text-sm md:text-base transition text-center flex items-center justify-center gap-2 text-slate-600 hover:bg-slate-100">
+                    <i class="fa-solid fa-book-quran"></i> Utsman r.a.
+                </button>
+                <button onclick="switchTab('ali')" id="tab-ali" class="tab-btn flex-1 min-w-[140px] py-3 px-4 rounded-xl font-bold text-sm md:text-base transition text-center flex items-center justify-center gap-2 text-slate-600 hover:bg-slate-100">
+                    <i class="fa-solid fa-brain"></i> Ali r.a.
+                </button>
+            </div>
+
+            <!-- Tab Content Container -->
+            <div id="materi-content-box" class="bg-white rounded-3xl p-6 md:p-8 shadow-xl border border-slate-100 min-h-[500px]">
+                <!-- Content generated via JS -->
+            </div>
+        </section>
+
+        <!-- SCREEN 3: KUIS INTERAKTIF -->
+        <section id="screen-kuis" class="screen-content hidden space-y-6">
+            <!-- Start Quiz Card -->
+            <div id="quiz-intro" class="bg-white rounded-3xl p-8 shadow-xl max-w-2xl mx-auto text-center space-y-6 border-2 border-amber-200">
+                <div class="w-24 h-24 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto text-4xl shadow-inner animate-float">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <div>
+                    <h2 class="text-3xl font-extrabold text-slate-800">Kuis Khulafaurrasyidin</h2>
+                    <p class="text-slate-600 mt-2">Uji pemahamanmu mengenai jasa-jasa 4 Khalifah. Jawab 10 soal dengan benar untuk mendapatkan Sertifikat Kelulusan!</p>
+                </div>
+                <div class="bg-amber-50 p-4 rounded-2xl text-left space-y-2 text-sm text-amber-900 border border-amber-200">
+                    <div class="flex items-center gap-2 font-bold"><i class="fa-solid fa-circle-info"></i> Aturan Kuis:</div>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>Jumlah soal: 10 butir pilihan ganda.</li>
+                        <li>Waktu per soal: 30 detik.</li>
+                        <li>Skor KKM: 70 poin untuk klaim sertifikat.</li>
+                    </ul>
+                </div>
+                <div class="space-y-4">
+                    <input type="text" id="playerNameInput" placeholder="Masukkan Nama Lengkap Sesuai Absen..." class="w-full px-5 py-3 rounded-2xl border-2 border-slate-300 focus:border-emerald-500 focus:outline-none text-center font-bold text-lg">
+                    <button onclick="startQuiz()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-4 rounded-2xl shadow-lg transition text-lg flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-play"></i> Mulai Kuis Sekarang
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quiz Play Container -->
+            <div id="quiz-play" class="hidden max-w-3xl mx-auto space-y-6">
+                <!-- Progress & Timer -->
+                <div class="bg-white p-4 rounded-2xl shadow-md flex justify-between items-center">
+                    <div class="font-bold text-emerald-700" id="quizProgress">Soal 1 / 10</div>
+                    <div class="flex items-center gap-2 bg-amber-100 text-amber-800 px-4 py-1.5 rounded-full font-bold">
+                        <i class="fa-solid fa-clock"></i> <span id="quizTimer">30</span> Detik
+                    </div>
+                </div>
+
+                <!-- Question Card -->
+                <div class="bg-white rounded-3xl p-6 md:p-8 shadow-xl space-y-6">
+                    <h3 id="questionText" class="text-xl md:text-2xl font-bold text-slate-800 leading-snug">
+                        <!-- Question content -->
+                    </h3>
+
+                    <!-- Options -->
+                    <div id="optionsContainer" class="grid grid-cols-1 gap-3">
+                        <!-- Options buttons injected here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Result Container -->
+            <div id="quiz-result" class="hidden max-w-2xl mx-auto bg-white rounded-3xl p-8 shadow-xl text-center space-y-6">
+                <div id="resultIcon" class="text-6xl text-amber-500">
+                    <i class="fa-solid fa-award"></i>
+                </div>
+                <h2 id="resultTitle" class="text-3xl font-extrabold text-slate-800">Hasil Kuis Kamu</h2>
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 inline-block w-full">
+                    <p class="text-slate-500 text-sm">Skor Akhir:</p>
+                    <p id="finalScore" class="text-6xl font-black text-emerald-600 my-2">0</p>
+                    <p id="resultFeedback" class="font-bold text-slate-700"></p>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <button onclick="startQuiz()" class="bg-emerald-600 text-white font-bold px-6 py-3 rounded-2xl hover:bg-emerald-500 transition">
+                        <i class="fa-solid fa-rotate-right mr-2"></i>Coba Lagi
+                    </button>
+                    <button id="certificateBtn" onclick="generateCertificate()" class="bg-amber-500 text-slate-900 font-bold px-6 py-3 rounded-2xl hover:bg-amber-400 transition hidden">
+                        <i class="fa-solid fa-file-certificate mr-2"></i>Cetak Sertifikat
+                    </button>
+                </div>
+            </div>
+
+            <!-- Certificate Printable Modal -->
+            <div id="certificateModal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+                <div class="bg-white p-2 rounded-2xl max-w-4xl w-full">
+                    <div class="flex justify-end p-2">
+                        <button onclick="closeCertificate()" class="text-slate-500 hover:text-red-500 text-2xl font-bold px-3">✕</button>
+                    </div>
+                    
+                    <!-- Certificate Canvas Container -->
+                    <div id="certificatePrintable" class="bg-white border-8 border-double border-amber-600 p-8 rounded-xl text-center space-y-6 relative overflow-hidden bg-[radial-gradient(#fffbebf0_1px,transparent_1px)] [background-size:16px_16px]">
+                        <!-- Corner Decorations -->
+                        <div class="absolute top-2 left-2 text-amber-600 text-3xl"><i class="fa-solid fa-crown"></i></div>
+                        <div class="absolute top-2 right-2 text-amber-600 text-3xl"><i class="fa-solid fa-crown"></i></div>
+
+                        <div class="space-y-2">
+                            <i class="fa-solid fa-certificate text-6xl text-amber-500"></i>
+                            <h2 class="text-3xl md:text-4xl font-extrabold text-emerald-800 tracking-wider">SERTIFIKAT PENGHARGAAN</h2>
+                            <p class="text-slate-600 text-sm font-semibold">Media Pembelajaran Interaktif PAI Kelas 6 SD</p>
+                        </div>
+
+                        <p class="text-slate-700 italic">Diberikan kepada siswa berprestasi:</p>
+                        <h3 id="certName" class="text-3xl font-black text-amber-600 uppercase border-b-2 border-amber-400 inline-block px-8 py-1">NAMA SISWA</h3>
+
+                        <p class="text-slate-700 max-w-xl mx-auto leading-relaxed">
+                            Atas keberhasilan menyelesaikan Evaluasi Pembelajaran PAI Materi <strong>"Jasa Khulafaurrasyidin untuk Dunia"</strong> dengan nilai sangat memuaskan:
+                        </p>
+
+                        <div class="text-4xl font-extrabold text-emerald-700 bg-emerald-50 border border-emerald-300 inline-block px-6 py-2 rounded-2xl">
+                            NILAI: <span id="certScore">100</span>
+                        </div>
+
+                        <div class="flex justify-between items-end pt-8 text-xs text-slate-500">
+                            <div>
+                                <p>Tanggal Lulus:</p>
+                                <p class="font-bold text-slate-800" id="certDate">-</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="font-bold text-slate-800">Guru Agama Islam</p>
+                                <div class="h-12"></div>
+                                <p class="font-bold underline text-slate-800">Tim PAI Kelas 6</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 text-center">
+                        <button onclick="window.print()" class="bg-emerald-600 text-white font-bold px-6 py-2.5 rounded-xl hover:bg-emerald-500 transition">
+                            <i class="fa-solid fa-print mr-2"></i>Cetak Sertifikat Ini
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-white text-center py-6 mt-12 border-t-4 border-amber-400">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <p class="font-heading text-lg text-emerald-400">Media Pembelajaran PAI Kelas 6 SD - Kurikulum Merdeka</p>
+            <p class="text-xs text-slate-400">Didesain secara interaktif, ramah anak, dan edukatif untuk generasi muslim Indonesia.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Data and Logic -->
+    <script>
+        // --- DATA MATERI KHALIFAH ---
+        const materiData = {
+            abubakar: {
+                title: "Abu Bakar Ash-Shiddiq r.a.",
+                subtitle: "Khalifah Pertama (632 – 634 M)",
+                icon: "fa-shield-halved",
+                color: "emerald",
+                bio: {
+                    namaLengkap: "Abdullah bin Abi Quhafah (Utsman) bin Amir al-Qurasyi",
+                    nasab: "Suku Quraysh (Bani Taim)",
+                    keislaman: "Orang dewasa pertama yang masuk Islam (Assabiqunal Awwalun). Sangat setia mendampingi Nabi SAW saat hijrah ke Madinah.",
+                    pengangkatan: "Dipilih secara musyawarah mufakat oleh kaum Anshar dan Muhajirin di Tsaqifah Bani Sa'idah setelah wafatnya Rasulullah SAW."
+                },
+                jasa: [
+                    { title: "Mempertahankan Persatuan Umat", desc: "Menenangkan umat Islam saat terkejut atas wafatnya Nabi SAW dengan ketegasan imannya." },
+                    { title: "Menumpas Gerakan Pemberontakan", desc: "Tegas menghadapi nabi palsu (seperti Musailamah al-Kazzab) dan memerangi mereka yang menolak membayar zakat." },
+                    { title: "Pengiriman Pasukan Usamah bin Zaid", desc: "Melanjutkan amanat Nabi SAW mengirim pasukan Usamah ke perbatasan Syam untuk menghadapi Perang Mut'ah." },
+                    { title: "Penghimpunan Mushaf Al-Qur'an", desc: "Atas usulan Umar bin Khattab r.a., mengutus Zaid bin Tsabit menghimpun ayat Al-Qur'an karena banyaknya para huffazh (penghafal Al-Qur'an) yang gugur dalam Perang Yamamah." }
+                ],
+                keteladanan: ["Jujur dan Selalu Membenarkan Kebenaran (Ash-Shiddiq)", "Sangat Dermawan dan Sederhana", "Tegas dalam Menjaga Syariat Agama", "Setia Kawan dan Rendah Hati"]
+            },
+            umar: {
+                title: "Umar bin Khattab r.a.",
+                subtitle: "Khalifah Kedua (634 – 644 M)",
+                icon: "fa-scale-balanced",
+                color: "sky",
+                bio: {
+                    namaLengkap: "Umar bin Khattab bin Nufail bin Abdul Uzza",
+                    nasab: "Suku Quraysh (Bani Adi)",
+                    keislaman: "Masuk Islam pada tahun ke-6 kenabian. Keislamannya membuat dakwah Islam menjadi terang-terangan dan kuat. Diberi gelar Al-Faruq (Pembeda Haq dan Batil).",
+                    pengangkatan: "Ditunjuk oleh Abu Bakar r.a. melalui wasiat yang disetujui para sahabat senior untuk menjaga stabilitas pemerintahan."
+                },
+                jasa: [
+                    { title: "Peluasan Wilayah Islam (Futuhat)", desc: "Pembebasan wilayah Baitul Maqdis (Palestina), Persia, Mesir, dan Syam dari kekaisaran besar." },
+                    { title: "Pembaharuan Administrasi & Reformasi Sistem", desc: "Membentuk lembaga Dewan Keuangan (Baitul Mal), departemen kepolisian, serta tentara formal bertunjangan." },
+                    { title: "Penetapan Kalender Hijriah", desc: "Menetapkannya berdasarkan peristiwa Hijrah Nabi SAW dari Makkah ke Madinah sebagai awal tahun Islam." },
+                    { title: "Pengorganisasian Shalat Tarawih Berjamaah", desc: "Menyatukan umat Islam untuk shalat Tarawih berjamaah secara rutin penuh di bulan Ramadan." }
+                ],
+                keteladanan: ["Tegas, Adil, dan Pemberani", "Sederhana dan Sangat Peduli rakyat (Suka Blusukan)", "Demokratis dan Mau Menerima Kritik", "Disiplin dan Bertanggung Jawab"]
+            },
+            utsman: {
+                title: "Utsman bin Affan r.a.",
+                subtitle: "Khalifah Ketiga (644 – 656 M)",
+                icon: "fa-book-quran",
+                color: "amber",
+                bio: {
+                    namaLengkap: "Utsman bin Affan bin Abu al-Ash bin Umayyah",
+                    nasab: "Suku Quraysh (Bani Umayyah)",
+                    keislaman: "Masuk Islam atas ajakan Abu Bakar. Menikahi dua putri Rasulullah SAW (Ruqayyah dan Ummu Kultsum) sehingga digelari Dzun Nurain (Pemilik Dua Cahaya).",
+                    pengangkatan: "Dipilih melalui Dewan Syura (tim formatur 6 sahabat) yang dibentuk oleh Umar bin Khattab sebelum wafat."
+                },
+                jasa: [
+                    { title: "Penulisan & Kodifikasi Mushaf Utsmani", desc: "Menyatukan standar bacaan Al-Qur'an dalam satu dialek utama (Quraysh) untuk mencegah perpecahan umat." },
+                    { title: "Renovasi dan Perluasan Masjid", desc: "Memperluas Masjid Nabawi di Madinah dan Masjidil Haram di Makkah." },
+                    { title: "Pembentukan Angkatan Laut Pertama", desc: "Membangun armada laut Islam untuk melindungi wilayah pesisir dari serangan Bizantium/Romawi." },
+                    { title: "Kedermawanan Luar Biasa", desc: "Membeli Sumur Ruma untuk rakyat dan mendonasikan ribuan unta untuk Perang Tabuk." }
+                ],
+                keteladanan: ["Sangat Pemalu dan Santun", "Dermawan Tanpa Batas", "Penyabar dan Mencintai Perdamaian", "Istiqamah Membaca Al-Qur'an"]
+            },
+            ali: {
+                title: "Ali bin Abi Thalib r.a.",
+                subtitle: "Khalifah Keempat (656 – 661 M)",
+                icon: "fa-brain",
+                color: "purple",
+                bio: {
+                    namaLengkap: "Ali bin Abi Thalib bin Abdul Muthallib",
+                    nasab: "Sepupu sekaligus Menantu Rasulullah SAW (Suami dari Fatimah az-Zahra)",
+                    keislaman: "Pemuda/anak-anak pertama yang masuk Islam. Dikenal sangat cerdas, wawasan luas, serta berani menggantikan Nabi di tempat tidur saat malam Hijrah.",
+                    pengangkatan: "Diangkat oleh mayoritas sahabat di Madinah di tengah situasi krisis setelah wafatnya Khalifah Utsman r.a."
+                },
+                jasa: [
+                    { title: "Pengembangan Ilmu Tata Bahasa Arab (Nahwu)", desc: "Memerintahkan Abu al-Aswad ad-Du'ali menyusun kaidah bahasa Arab untuk menjaga keaslian bacaan Al-Qur'an." },
+                    { title: "Penataan Ulang Keuangan & Pemerintahan", desc: "Mengganti pejabat yang kurang cakap dan mengembalikan tanah/harta negara ke Baitul Mal." },
+                    { title: "Pemindahan Pusat Pemerintahan", desc: "Memindahkan ibu kota pemerintahan dari Madinah ke Kufah (Irak) demi efisiensi politik kawasan." }
+                ],
+                keteladanan: ["Cerdas dan Bijaksana (Babul 'Ilmi)", "Pemberani dan Tangguh di Medan Laga", "Hidup Sederhana dan Zuhud", "Adil dan Tegas Membela Keberadaan Hukum"]
+            }
+        };
+
+        // --- DATA KUIS INTERAKTIF ---
+        const quizQuestions = [
+            {
+                q: "Siapakah Sahabat yang mendapat gelar Ash-Shiddiq karena selalu membenarkan ucapan Nabi SAW?",
+                options: ["Umar bin Khattab r.a.", "Abu Bakar r.a.", "Utsman bin Affan r.a.", "Ali bin Abi Thalib r.a."],
+                answer: 1
+            },
+            {
+                q: "Salah satu jasa besar Abu Bakar r.a. atas usulan Umar bin Khattab r.a. adalah...",
+                options: ["Membuat Kalender Hijriah", "Membentuk Angkatan Laut", "Menghimpun ayat-ayat Al-Qur'an", "Menyusun ilmu Nahwu"],
+                answer: 2
+            },
+            {
+                q: "Khalifah Umar bin Khattab r.a. mendapat julukan 'Al-Faruq', yang artinya...",
+                options: ["Pemilik dua cahaya", "Pembeda antara yang benar dan batil", "Pintu Ilmu Pengetahuan", "Yang selalu membenarkan"],
+                answer: 1
+            },
+            {
+                q: "Penetapan penanggalan/Kalender Hijriah dimulai pada masa kepemimpinan Khalifah...",
+                options: ["Abu Bakar Ash-Shiddiq r.a.", "Umar bin Khattab r.a.", "Utsman bin Affan r.a.", "Ali bin Abi Thalib r.a."],
+                answer: 1
+            },
+            {
+                q: "Mengapa Utsman bin Affan r.a. mendapat julukan 'Dzun Nurain'?",
+                options: ["Karena memiliki dua pedang sakti", "Karena memimpin dua negara", "Karena menikahi dua putri Rasulullah SAW", "Karena dermawan dua kali lipat"],
+                answer: 2
+            },
+            {
+                q: "Jasa utama Khalifah Utsman bin Affan r.a. dalam bidang Al-Qur'an adalah...",
+                options: ["Menghafal Al-Qur'an pertama kali", "Penyusunan Mushaf Utsmani standar", "Penerjemahan Al-Qur'an", "Pemberian harakat Al-Qur'an"],
+                answer: 1
+            },
+            {
+                q: "Khalifah Ali bin Abi Thalib r.a. dikenal sangat cerdas sehingga Nabi SAW menggelarinya sebagai...",
+                options: ["Al-Faruq", "Babul 'Ilmi (Pintu Ilmu)", "Ash-Shiddiq", "Saifullah"],
+                answer: 1
+            },
+            {
+                q: "Penyusunan dasar kaidah tata bahasa Arab (Nahwu) pada masa Khalifah Ali r.a. dipercayakan kepada...",
+                options: ["Zaid bin Tsabit", "Abu al-Aswad ad-Du'ali", "Usamah bin Zaid", "Musailamah"],
+                answer: 1
+            },
+            {
+                q: "Berapa lamakah masa kepemimpinan Khulafaurrasyidin pertama, Abu Bakar Ash-Shiddiq r.a.?",
+                options: ["10 Tahun", "2 Tahun (632–634 M)", "12 Tahun", "5 Tahun"],
+                answer: 1
+            },
+            {
+                q: "Sikap teladan utama dari Utsman bin Affan r.a. yang patut ditiru dalam kehidupan sehari-hari adalah...",
+                options: ["Sombong dengan harta", "Sangat dermawan dan pemalu", "Pemberontak", "Penyendiri"],
+                answer: 1
+            }
+        ];
+
+        // --- AUDIO SYNTHESIZER (TONE.JS) ---
+        let audioEnabled = true;
+        const synth = new Tone.Synth().toDestination();
+
+        function playSound(type) {
+            if (!audioEnabled) return;
+            try {
+                Tone.start();
+                if (type === 'click') {
+                    synth.triggerAttackRelease("C5", "8n");
+                } else if (type === 'correct') {
+                    const now = Tone.now();
+                    synth.triggerAttackRelease("E5", "8n", now);
+                    synth.triggerAttackRelease("G5", "8n", now + 0.1);
+                    synth.triggerAttackRelease("C6", "4n", now + 0.2);
+                } else if (type === 'wrong') {
+                    synth.triggerAttackRelease("C3", "4n");
+                } else if (type === 'win') {
+                    const now = Tone.now();
+                    synth.triggerAttackRelease("C5", "8n", now);
+                    synth.triggerAttackRelease("E5", "8n", now + 0.1);
+                    synth.triggerAttackRelease("G5", "8n", now + 0.2);
+                    synth.triggerAttackRelease("C6", "2n", now + 0.3);
+                }
+            } catch (e) {
+                console.log("Audio play error:", e);
+            }
+        }
+
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            const btn = document.getElementById('audioBtn');
+            const icon = document.getElementById('audioIcon');
+            if (audioEnabled) {
+                btn.className = "bg-amber-100 text-amber-700 px-3 py-2 rounded-xl font-bold hover:bg-amber-200 transition";
+                icon.className = "fa-solid fa-volume-high";
+            } else {
+                btn.className = "bg-slate-200 text-slate-500 px-3 py-2 rounded-xl font-bold transition";
+                icon.className = "fa-solid fa-volume-xmark";
+            }
+        }
+
+        // --- NAVIGATION LOGIC ---
+        function showScreen(screenId) {
+            playSound('click');
+            document.querySelectorAll('.screen-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`screen-${screenId}`).classList.remove('hidden');
+
+            if (screenId === 'materi') {
+                switchTab('abubakar');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        function openKhalifah(key) {
+            showScreen('materi');
+            switchTab(key);
+        }
+
+        // --- MATERI TAB LOGIC ---
+        function switchTab(key) {
+            playSound('click');
+            // Update Tab styles
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "tab-btn flex-1 min-w-[140px] py-3 px-4 rounded-xl font-bold text-sm md:text-base transition text-center flex items-center justify-center gap-2 text-slate-600 hover:bg-slate-100";
+            });
+            const activeTab = document.getElementById(`tab-${key}`);
+            if (activeTab) {
+                activeTab.className = "tab-btn flex-1 min-w-[140px] py-3 px-4 rounded-xl font-bold text-sm md:text-base transition text-center flex items-center justify-center gap-2 tab-active";
+            }
+
+            // Render Content
+            const data = materiData[key];
+            const box = document.getElementById('materi-content-box');
+
+            let jasaHtml = data.jasa.map((j, i) => `
+                <div class="bg-slate-50 border-l-4 border-${data.color}-500 p-4 rounded-r-2xl shadow-sm space-y-1">
+                    <h5 class="font-bold text-slate-800 text-base md:text-lg">${i+1}. ${j.title}</h5>
+                    <p class="text-slate-600 text-sm">${j.desc}</p>
+                </div>
+            `).join('');
+
+            let keteladananHtml = data.keteladanan.map(k => `
+                <li class="flex items-center gap-2 text-slate-700 text-sm md:text-base bg-emerald-50/60 p-2.5 rounded-xl border border-emerald-100">
+                    <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                    <span>${k}</span>
+                </li>
+            `).join('');
+
+            box.innerHTML = `
+                <div class="space-y-6">
+                    <!-- Title Header -->
+                    <div class="flex items-center gap-4 border-b pb-4">
+                        <div class="w-16 h-16 bg-${data.color}-100 text-${data.color}-600 rounded-2xl flex items-center justify-center text-3xl shadow-sm">
+                            <i class="fa-solid ${data.icon}"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl md:text-3xl font-extrabold text-slate-800">${data.title}</h3>
+                            <p class="text-sm md:text-base text-amber-600 font-bold">${data.subtitle}</p>
+                        </div>
+                    </div>
+
+                    <!-- Grid Info Biografi -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-amber-50/60 p-4 rounded-2xl border border-amber-200/60 space-y-2">
+                            <h4 class="font-bold text-amber-900 text-base flex items-center gap-2">
+                                <i class="fa-solid fa-id-card text-amber-600"></i> Biografi & Nasab
+                            </h4>
+                            <p class="text-xs md:text-sm text-slate-700"><strong>Nama Lengkap:</strong> ${data.bio.namaLengkap}</p>
+                            <p class="text-xs md:text-sm text-slate-700"><strong>Nasab/Suku:</strong> ${data.bio.nasab}</p>
+                        </div>
+
+                        <div class="bg-sky-50/60 p-4 rounded-2xl border border-sky-200/60 space-y-2">
+                            <h4 class="font-bold text-sky-900 text-base flex items-center gap-2">
+                                <i class="fa-solid fa-star-and-crescent text-sky-600"></i> Keislaman & Pengangkatan
+                            </h4>
+                            <p class="text-xs md:text-sm text-slate-700"><strong>Keislaman:</strong> ${data.bio.keislaman}</p>
+                            <p class="text-xs md:text-sm text-slate-700"><strong>Pengangkatan:</strong> ${data.bio.pengangkatan}</p>
+                        </div>
+                    </div>
+
+                    <!-- Jasa & Kontribusi -->
+                    <div class="space-y-3">
+                        <h4 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-hand-holding-heart text-emerald-600"></i> Jasa & Kontribusi untuk Dunia Islam
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            ${jasaHtml}
+                        </div>
+                    </div>
+
+                    <!-- Keteladanan -->
+                    <div class="space-y-3 pt-2">
+                        <h4 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-award text-amber-500"></i> Nilai Keteladanan
+                        </h4>
+                        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            ${keteladananHtml}
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- KUIS INTERAKTIF LOGIC ---
+        let currentQuestion = 0;
+        let score = 0;
+        let timer;
+        let timeLeft = 30;
+        let playerName = "";
+
+        function startQuiz() {
+            playerName = document.getElementById('playerNameInput').value.trim();
+            if (!playerName) {
+                alert("Silakan masukkan nama kamu terlebih dahulu!");
+                return;
+            }
+
+            playSound('click');
+            currentQuestion = 0;
+            score = 0;
+
+            document.getElementById('quiz-intro').classList.add('hidden');
+            document.getElementById('quiz-result').classList.add('hidden');
+            document.getElementById('quiz-play').classList.remove('hidden');
+
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            clearInterval(timer);
+            timeLeft = 30;
+            document.getElementById('quizTimer').innerText = timeLeft;
+
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('quizTimer').innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    selectAnswer(-1); // Waktu habis, dianggap salah
+                }
+            }, 1000);
+
+            const qData = quizQuestions[currentQuestion];
+            document.getElementById('quizProgress').innerText = `Soal ${currentQuestion + 1} / ${quizQuestions.length}`;
+            document.getElementById('questionText').innerText = qData.q;
+
+            const optionsBox = document.getElementById('optionsContainer');
+            optionsBox.innerHTML = '';
+
+            qData.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-2xl border-2 border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 font-semibold text-slate-700 transition flex items-center gap-3";
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-full bg-slate-100 border border-slate-300 flex items-center justify-center text-sm font-bold text-slate-600">${String.fromCharCode(65 + idx)}</span>
+                    <span>${opt}</span>
+                `;
+                btn.onclick = () => selectAnswer(idx);
+                optionsBox.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(selectedIdx) {
+            clearInterval(timer);
+            const qData = quizQuestions[currentQuestion];
+            const optionsBox = document.getElementById('optionsContainer');
+            const btns = optionsBox.getElementsByTagName('button');
+
+            // Nonaktifkan tombol
+            for (let b of btns) b.disabled = true;
+
+            if (selectedIdx === qData.answer) {
+                playSound('correct');
+                score += 10;
+                if (selectedIdx >= 0) btns[selectedIdx].classList.add('bg-emerald-100', 'border-emerald-600', 'text-emerald-800');
+            } else {
+                playSound('wrong');
+                if (selectedIdx >= 0) btns[selectedIdx].classList.add('bg-red-100', 'border-red-500', 'text-red-800');
+                // Tunjukkan jawaban benar
+                btns[qData.answer].classList.add('bg-emerald-100', 'border-emerald-600', 'text-emerald-800');
+            }
+
+            setTimeout(() => {
+                currentQuestion++;
+                if (currentQuestion < quizQuestions.length) {
+                    loadQuestion();
+                } else {
+                    finishQuiz();
+                }
+            }, 1500);
+        }
+
+        function finishQuiz() {
+            document.getElementById('quiz-play').classList.add('hidden');
+            document.getElementById('quiz-result').classList.remove('hidden');
+
+            document.getElementById('finalScore').innerText = score;
+            const certBtn = document.getElementById('certificateBtn');
+            const feedback = document.getElementById('resultFeedback');
+
+            if (score >= 70) {
+                playSound('win');
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                feedback.innerText = "Selamat! Kamu sangat memahami materi Khulafaurrasyidin.";
+                certBtn.classList.remove('hidden');
+            } else {
+                feedback.innerText = "Tetap semangat! Pelajari kembali materinya dan coba lagi ya.";
+                certBtn.classList.add('hidden');
+            }
+        }
+
+        function generateCertificate() {
+            playSound('click');
+            const d = new Date();
+            const dateStr = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+            document.getElementById('certName').innerText = playerName;
+            document.getElementById('certScore').innerText = score;
+            document.getElementById('certDate').innerText = dateStr;
+
+            document.getElementById('certificateModal').classList.remove('hidden');
+        }
+
+        function closeCertificate() {
+            playSound('click');
+            document.getElementById('certificateModal').classList.add('hidden');
+        }
+
+        // Preload tab 1 on load
+        window.onload = function() {
+            switchTab('abubakar');
+        };
+    </script>
+</body>
+</html>
